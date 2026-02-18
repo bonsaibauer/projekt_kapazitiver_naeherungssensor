@@ -1,0 +1,43 @@
+---
+name: digital-scale
+board: boards/red-pitaya
+version: 0.1.0
+
+cores:
+  - fpga/cores/axi_ctl_register_v1_0
+  - fpga/cores/axi_sts_register_v1_0
+  - fpga/cores/red_pitaya_adc_dac_v1_0  # Wichtig: Der Core für ADC/DAC Kommunikation
+
+memory:
+  - name: control
+    offset: '0x60000000'
+    range: 4K
+  - name: status
+    offset: '0x50000000'
+    range: 4K
+
+# Hier definieren wir, was wir in den FPGA SCHREIBEN können
+control_registers:
+  - dds_freq_hz       # Offset 0: Zum Einstellen der Sinusfrequenz
+  - led               # Offset 4: Debug-LEDs (optional, aber nützlich)
+
+# Hier definieren wir, was wir aus dem FPGA LESEN können
+status_registers:
+  - adc_amplitude     # Offset 0: Der gemessene Rohwert der Waage
+
+parameters:
+  fclk0: 125000000
+
+xdc:
+  - ./constraints.xdc
+
+drivers:
+  - server/drivers/common.hpp
+  - ./scale.hpp       # neuer C++ Treiber
+
+web:
+  - ./web/index.html
+  - web/koheron.ts
+  - web/scale.ts      # TypeScript-Interface für den Treiber
+  - ./web/app.ts      # Anwendungslogik (Gewichtsberechnung)
+  - web/main.css
