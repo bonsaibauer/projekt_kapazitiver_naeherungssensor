@@ -37,7 +37,7 @@ class ScaleDriver(object):
 if __name__ == "__main__":
     # Konfiguration: IP-Adresse des Red Pitaya (Umgebungsvariable oder Standard)
     host = os.getenv('HOST', '192.168.8.193') 
-    instrument_name = 'digital-scale'  # Muss exakt zum 'name' in config.yml passen!
+    instrument_name = 'scale'  # Muss exakt zum 'name' in config.yml passen!
 
     # Kalibrierungs-Faktor (Beispielwert - muss experimentell ermittelt werden)
     # Formel: Gewicht = (Messwert - Tara) * CALIBRATION_FACTOR

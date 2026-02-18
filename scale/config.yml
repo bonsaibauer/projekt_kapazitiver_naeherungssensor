@@ -1,5 +1,5 @@
 ---
-name: digital-scale
+name: scale
 board: boards/red-pitaya
 version: 0.1.0
 
