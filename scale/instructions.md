@@ -56,7 +56,8 @@ Stellen Sie sicher, dass das Koheron SDK installiert ist.
 
 \### Option A: Webinterface
 
-1\.  Öffne im Browser: `http://192.168.8.193/koheron/scale`
+1\.  Öffne im Browser: `http://192.168.8.193/`
+    (Bei Koheron Image 0.24 läuft das Live-Instrument unter `/`, nicht unter `/koheron/<name>`.)
 
 2\.  Drücke "TARA" bei unbelasteter Waage.
 
