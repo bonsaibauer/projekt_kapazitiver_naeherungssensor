@@ -1,20 +1,16 @@
-import { Context } from 'koheron';
-import { ScaleDriver } from './scale'; 
-
 class App {
     private driver: ScaleDriver;
-    private context: Context;
+    private client: Client;
 
     // Variablen für die Waage
     private tareOffset: number = 0;
     private calibrationFactor: number = 0.0005; // Beispielwert: ADC-Units in KG umrechnen
     private isRunning: boolean = false;
 
-    constructor(window: Window, document: Document) {
+    constructor(window: Window, document: Document, ip: string) {
         console.log("App starting...");
 
-        this.context = new Context(window.location.host);
-        this.driver = new ScaleDriver(this.context);
+        this.client = new Client(ip, 5);
 
         const displayValue = document.getElementById('value');
         const displayRaw = document.getElementById('adc-raw');
@@ -23,16 +19,17 @@ class App {
         const inputCalib = <HTMLInputElement>document.getElementById('input-calib');
         const inputFreq = <HTMLInputElement>document.getElementById('input-freq');
 
-        this.context.connect().then(() => {
+        this.client.init(() => {
             console.log("Connected to Red Pitaya");
-            
+            this.driver = new ScaleDriver(this.client);
 
-            this.updateSettings(inputFreq);	//100kHz
+            this.updateSettings(inputFreq); // 100 kHz default
             this.isRunning = true;
-            
-            // Loop starten
+
             this.updateLoop(displayValue, displayRaw);
         });
+
+        window.onbeforeunload = () => { this.client.exit(); };
 
         // Event Listener für Buttons
         btnTare.onclick = () => {
@@ -84,4 +81,4 @@ class App {
     }
 }
 
-const app = new App(window, document);
+const app = new App(window, document, location.hostname);
