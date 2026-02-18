@@ -39,14 +39,6 @@ make CONFIG=/pfad/zu/projekt_kapazitiver_naeherungssensor/scale/config.yml run
 4. "Run" beim Instrument `scale`.
 5. Danach `http://<red-pitaya-ip>/` öffnen.
 
-## Hinweis zu GitHub Actions
+## Hinweis
 
-Der Workflow `.github/workflows/build-koheron-scale.yml` erzeugt ein **deploybares** `scale.zip` als Artifact (`scale-instrument-zip`), wenn ein passender Self-Hosted-Runner vorhanden ist:
-
-- Labels: `self-hosted`, `linux`, `x64`, `koheron`
-- Zugriff auf `koheron-sdk` Repository
-- Koheron Build-Toolchain auf dem Runner (inkl. Vivado)
-
-Optional:
-- Repo Variable `KOHERON_SDK_REPOSITORY` setzen (z.B. `dein-user/koheron-sdk`)
-- Secret `KOHERON_SDK_PAT` setzen, falls das SDK-Repo privat ist
+Der Build des deploybaren Instrument-ZIPs erfolgt lokal mit Koheron `make`.
