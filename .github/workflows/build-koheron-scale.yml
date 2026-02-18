@@ -7,9 +7,45 @@ on:
       - ".github/workflows/build-koheron-scale.yml"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: koheron-scale-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  smoke-check:
+    name: Smoke Check (GitHub Runner)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout project repository
+        uses: actions/checkout@v4
+        with:
+          path: project
+
+      - name: Validate required files
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f "${GITHUB_WORKSPACE}/project/scale/config.yml"
+          test -f "${GITHUB_WORKSPACE}/project/scale/block_design.tcl"
+          test -f "${GITHUB_WORKSPACE}/project/scale/scale.hpp"
+          test -f "${GITHUB_WORKSPACE}/project/scale/web/index.html"
+          echo "Project structure looks valid."
+
+      - name: Explain build runner requirements
+        shell: bash
+        run: |
+          echo "Koheron full instrument build needs a self-hosted runner with Koheron/Vivado toolchain."
+          echo "If the next job stays queued, your self-hosted runner is offline or labels do not match."
+
   build-instrument:
-    runs-on: self-hosted
+    name: Build Instrument (Self-Hosted Koheron Runner)
+    needs: smoke-check
+    runs-on: [self-hosted, linux, x64, koheron]
+    timeout-minutes: 120
 
     steps:
       - name: Checkout project repository
@@ -22,6 +58,17 @@ jobs:
         with:
           repository: Koheron/koheron-sdk
           path: koheron-sdk
+
+      - name: Environment diagnostics
+        shell: bash
+        run: |
+          set -euo pipefail
+          uname -a
+          whoami
+          command -v make
+          command -v python3
+          command -v zip
+          command -v unzip
 
       - name: Build instrument zip with Koheron Makefile
         shell: bash
@@ -40,6 +87,7 @@ jobs:
             echo "scale.zip not found in koheron-sdk/tmp"
             exit 1
           fi
+          unzip -l "${ZIP_PATH}" | grep -E "(index.html|serverd|scale.bit|version)" >/dev/null
           echo "zip_path=${ZIP_PATH}" >> "${GITHUB_OUTPUT}"
 
       - name: Upload scale.zip artifact
