@@ -6,7 +6,8 @@ version: 0.1.0
 cores:
   - fpga/cores/axi_ctl_register_v1_0
   - fpga/cores/axi_sts_register_v1_0
-  - fpga/cores/red_pitaya_adc_dac_v1_0  # Wichtig: Der Core für ADC/DAC Kommunikation
+  - fpga/cores/redp_adc_v1_0
+  - fpga/cores/redp_dac_v1_0
 
 memory:
   - name: control
@@ -29,7 +30,8 @@ parameters:
   fclk0: 125000000
 
 xdc:
-  - ./constraints.xdc
+  - boards/red-pitaya/config/ports.xdc
+  - boards/red-pitaya/config/clocks.xdc
 
 drivers:
   - server/drivers/common.hpp

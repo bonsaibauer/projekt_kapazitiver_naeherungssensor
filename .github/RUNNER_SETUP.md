@@ -1,43 +1,27 @@
-# Self-Hosted Runner Setup (Koheron Build)
+# Koheron Self-Hosted Runner
 
-This project builds a full Koheron instrument. The build job requires a self-hosted Linux runner.
-
-## Required runner labels
-
-The workflow targets:
+Der Workflow fuer das deploybare `scale.zip` benoetigt einen Self-Hosted Runner mit Labeln:
 
 - `self-hosted`
 - `linux`
 - `x64`
 - `koheron`
 
-If the job stays in queue, usually no online runner matches these labels.
+## Einrichtung
 
-## Minimal prerequisites on the runner host
+1. In GitHub: `Settings -> Actions -> Runners -> New self-hosted runner`.
+2. Linux x64 waehlen.
+3. Runner auf dem Build-Rechner installieren und registrieren.
+4. Beim Registrieren das Label `koheron` setzen.
+5. Runner-Service starten.
 
-- Ubuntu Linux
-- `git`, `make`, `python3`, `zip`, `unzip`
-- Docker (if Koheron build uses Docker mode)
-- Koheron FPGA toolchain prerequisites (Vivado environment for full bitstream build)
+## Erforderliche Umgebung
 
-## Register runner
+- Zugriff auf das `koheron-sdk` Repo
+- Koheron Build-Toolchain (Vivado + Build-Abhaengigkeiten)
+- `make`, `python3`, `zip`, `unzip`, `docker` (falls genutzt)
 
-1. In GitHub repo: `Settings -> Actions -> Runners -> New self-hosted runner`.
-2. Select Linux x64.
-3. Run the shown commands on your build machine.
-4. Add custom label `koheron` when configuring the runner.
-5. Start runner service and keep it online.
+## Workflow-Konfiguration
 
-## Verify runner availability
-
-In GitHub UI:
-
-- `Actions -> Runners` must show runner as `Idle` or `Active`.
-- Labels must include `koheron`.
-
-## Typical queue causes
-
-- Runner service not running
-- Runner machine offline
-- Missing label `koheron`
-- Runner registered at org level but repo has no access
+- Variable `KOHERON_SDK_REPOSITORY` optional setzen (Default: `Koheron/koheron-sdk`)
+- Secret `KOHERON_SDK_PAT` setzen, wenn SDK-Repo privat ist

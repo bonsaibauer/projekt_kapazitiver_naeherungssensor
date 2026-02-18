@@ -1,95 +1,52 @@
-\# Digitale Kapazitive Waage (Red Pitaya)
+# Digitale Kapazitive Waage (Red Pitaya / Koheron)
 
+## Wichtig: Wann `make` notwendig ist
 
+`make` passiert **nicht** beim Klick auf "Add instrument" im Koheron-Webtool.
 
-Dieses Projekt implementiert eine kapazitive Waage auf dem Red Pitaya (Koheron SDK).
+Das Webtool installiert nur ein bereits fertiges Instrument-ZIP.  
+Das fertige ZIP muss vorher gebaut werden.
 
-Es erzeugt ein Sinus-Signal (Excitation), sendet es durch eine Messbrücke und misst die Amplitude des Antwortsignals, um daraus ein Gewicht zu berechnen.
+## Korrekte Reihenfolge
 
+1. Instrument lokal mit Koheron SDK bauen (`make`).
+2. Das erzeugte `scale.zip` hochladen.
+3. Im Koheron-UI "Run" wählen.
+4. Webinterface unter `http://<red-pitaya-ip>/` aufrufen.
 
+## Lokaler Build (empfohlen)
 
-\## Aufbau der Hardware
+Beispiel (Linux/WSL, im `koheron-sdk`):
 
+```bash
+make CONFIG=/pfad/zu/projekt_kapazitiver_naeherungssensor/scale/config.yml
+```
 
+Das ZIP liegt danach unter `koheron-sdk/tmp/.../scale.zip`.
 
-1\.  \*\*Ausgang:\*\* Verbinde `OUT 1` des Red Pitaya mit dem Eingang der Kapazitiven Messbrücke.
+Optional direkt aufs Board:
 
-2\.  \*\*Eingang:\*\* Verbinde den Ausgang der Messbrücke mit `IN 1` des Red Pitaya.
+```bash
+export HOST=192.168.8.193
+make CONFIG=/pfad/zu/projekt_kapazitiver_naeherungssensor/scale/config.yml run
+```
 
-3\.  \*\*Masse:\*\* Verbinde die Massen (GND) der Schaltungen.
+## Upload im Koheron-Webtool
 
+1. `http://<red-pitaya-ip>/koheron` öffnen.
+2. "Add instrument" klicken.
+3. Das mit `make` erzeugte `scale.zip` auswählen.
+4. "Run" beim Instrument `scale`.
+5. Danach `http://<red-pitaya-ip>/` öffnen.
 
+## Hinweis zu GitHub Actions
 
-\## Installation \& Kompilierung
+Der Workflow `.github/workflows/build-koheron-scale.yml` erzeugt ein **deploybares** `scale.zip` als Artifact (`scale-instrument-zip`), wenn ein passender Self-Hosted-Runner vorhanden ist:
 
+- Labels: `self-hosted`, `linux`, `x64`, `koheron`
+- Zugriff auf `koheron-sdk` Repository
+- Koheron Build-Toolchain auf dem Runner (inkl. Vivado)
 
-
-Stellen Sie sicher, dass das Koheron SDK installiert ist.
-
-
-
-1\.  Kompilieren des Instruments (Bitstream \& Software):
-
-&nbsp;   ```bash
-
-&nbsp;   make
-
-&nbsp;   ```
-
-
-
-2\.  Installieren auf dem Red Pitaya (ersetze IP durch deine Board-IP):
-
-&nbsp;   ```bash
-
-&nbsp;   export HOST=192.168.8.193
-
-&nbsp;   make install
-
-&nbsp;   ```
-
-
-
-\## Benutzung
-
-
-
-\### Option A: Webinterface
-
-1\.  Öffne im Browser: `http://192.168.8.193/`
-    (Bei Koheron Image 0.24 läuft das Live-Instrument unter `/`, nicht unter `/koheron/<name>`.)
-
-2\.  Drücke "TARA" bei unbelasteter Waage.
-
-3\.  Stelle den Kalibrierungsfaktor ein, bis das Gewicht stimmt.
-
-
-
-\### Option B: Python Skript
-
-1\.  Führe das Skript aus:
-
-&nbsp;   ```bash
-
-&nbsp;   python3 measure.py
-
-&nbsp;   ```
-
-
-
-\## Projektstruktur
-
-
-
-\* `block\_design.tcl`: FPGA Hardware-Design (DDS Generator + ADC Schnittstelle).
-
-\* `constraints.xdc`: Pin-Belegung für ADC, DAC und LEDs.
-
-\* `config.yml`: Konfiguration der Speicheradressen und Treiber.
-
-\* `scale.hpp`: C++ Treiber für den FPGA-Zugriff.
-
-\* `web/`: TypeScript/HTML Benutzeroberfläche.
-
-\* `measure.py`: Standalone Python-Skript zur Messung.
-
+Optional:
+- Repo Variable `KOHERON_SDK_REPOSITORY` setzen (z.B. `dein-user/koheron-sdk`)
+- Secret `KOHERON_SDK_PAT` setzen, falls das SDK-Repo privat ist
