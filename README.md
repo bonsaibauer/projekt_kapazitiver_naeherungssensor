@@ -1,3 +1,5 @@
+![Image 1](images/image_1.jpg)
+
 # Projekt 2: Kapazitiver Näherungssensor
 
 ## Einordnung
@@ -32,6 +34,15 @@ Die Abgabe umfasst:
   - 2× ADC, 125 MS/s, 14 Bit
   - 2× DAC, 125 MS/s, 14 Bit
   - Ethernet
+
+## Koheron SDK (Git Submodule)
+- Das Repository `koheron-sdk` ist als Git-Submodule unter `./koheron-sdk` eingebunden.
+- Initiales Klonen inklusive Submodule:
+  `git clone --recurse-submodules <repo-url>`
+- Falls das Repository bereits ohne Submodule geklont wurde:
+  `git submodule update --init --recursive`
+- Submodule auf den im Projekt hinterlegten Stand aktualisieren:
+  `git submodule update --recursive`
 
 ## Sensorentwicklung und Auswertung
 - Kapazitiver Messeffekt

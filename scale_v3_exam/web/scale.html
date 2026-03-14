@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Koheron | Scale v3 Exam</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Koheron">
+  <meta charset="utf-8">
+
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
+  <script type="text/javascript" src="html-imports.min.js"></script>
+
+  <link rel="shortcut icon" href="kbird.ico">
+  <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="_koheron.css">
+  <link rel="stylesheet" type="text/css" href="main.css">
+  <style>
+    .result-box {
+      background: #f7f7f7;
+      border: 1px solid #dcdcdc;
+      border-radius: 4px;
+      padding: 8px 10px;
+      margin-top: 8px;
+    }
+
+    .led-indicators {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .led-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1px solid #bdbdbd;
+      background: #d9d9d9;
+    }
+
+    .led-dot.on {
+      background: #ff3b30;
+      border-color: #d62d24;
+    }
+  </style>
+
+  <script type="text/javascript" src="jquery.min.js"></script>
+  <script type="text/javascript" src="bootstrap.min.js"></script>
+
+  <link rel="import" href="navigation.html" data-parent="navigation">
+</head>
+
+<body>
+
+  <div id="navigation"></div>
+
+  <div class="container-fluid" id="main">
+
+    <div class="row">
+      <div class="col-md-8">
+        <section class="panel panel-default" style="padding:12px; margin-bottom:12px;">
+          <div class="crossed"><span>Curves</span></div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div><label><input type="checkbox" id="curve-in1" checked> IN1</label></div>
+              <div><label><input type="checkbox" id="curve-in2" checked> IN2</label></div>
+              <div><label><input type="checkbox" id="curve-out1" checked> OUT1</label></div>
+            </div>
+            <div class="col-sm-6">
+              <div><label><input type="checkbox" id="curve-out2" checked> OUT2</label></div>
+              <div><label><input type="checkbox" id="curve-feature" checked> Feature (IQ)</label></div>
+              <div><label><input type="checkbox" id="curve-weight" checked> Weight</label></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel panel-default plot-panel">
+          <div class="panel-heading">
+            <strong>Diagnostics Plot</strong>
+          </div>
+          <div class="panel-body">
+            <div id="plot-placeholder" class="plot-placeholder"></div>
+          </div>
+        </section>
+
+        <section class="panel panel-default" style="padding:12px; margin-bottom:12px;">
+          <div class="crossed"><span>Scale</span></div>
+          <div style="font-size: 3.2em; font-weight: 700; margin-bottom: 8px;">
+            <span id="weight-value">0.000</span> <span id="weight-unit" style="font-size: 0.45em;">kg</span>
+          </div>
+          <button id="btn-tare" class="btn btn-warning btn-block">Tare (set zero)</button>
+          <div style="margin-top: 14px;">
+            <div class="result-box">
+              <div>Calibration: <strong>Hybrid (Exp <=1000g, Lin >1000g)</strong></div>
+            </div>
+            <div style="margin-top:8px;">Feature tare: <strong id="scale-tare-feature">0.0000</strong></div>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="col-md-4">
+        <section class="panel panel-default" style="padding:12px; margin-bottom:12px;">
+          <div class="crossed"><span>LED</span></div>
+          <div class="result-box">One more LED every 200 g (from final weight).</div>
+          <div id="led-indicators" class="led-indicators"></div>
+          <div>Active LEDs: <strong id="led-active-count">0 / 8</strong></div>
+          <div>Weight for LEDs: <strong id="led-weight-g">0 g</strong></div>
+        </section>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+
+  <script language="javascript" type="text/javascript" src="jquery.flot.js"></script>
+  <script language="javascript" type="text/javascript" src="jquery.flot.resize.js"></script>
+  <script language="javascript" type="text/javascript" src="jquery.flot.axislabels.js"></script>
+
+</body>
+
+</html>

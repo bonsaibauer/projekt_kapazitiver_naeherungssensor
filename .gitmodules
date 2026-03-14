@@ -1,0 +1,3 @@
+[submodule "koheron-sdk"]
+	path = koheron-sdk
+	url = https://github.com/bonsaibauer/koheron-sdk
